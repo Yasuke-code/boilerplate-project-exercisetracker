@@ -13,12 +13,16 @@ const type = require('mongoose/lib/schema/operators/type');
 // })
  mongoose.connect('mongodb+srv://matansdev:zn2u7D79tf3ABnCE@cluster0.0tn77wn.mongodb.net/?retryWrites=true&w=majority')
 
- mongoose.Schema({
+ const userSchema = mongoose.Schema(
+  {
   username: {
     type: String, 
     unique: true,
+   },
   },
- });
+  { versionKey : false }
+ );
+ const User = mongoose.model('User', userSchema)
 
 app.use(cors())
 app.use(express.urlencoded({extended:true}))
@@ -31,14 +35,13 @@ app.get('/', (req, res) => {
 
 
 app.post("/api/users",async (req, res)=>{
-const username=req.body.username
+  const username=req.body.username
+
   const user = await User.create({
     username, 
-
-  });
-  res.json({
-    user
-  })
+    });
+    
+  res.json(user)
 });
 
 
