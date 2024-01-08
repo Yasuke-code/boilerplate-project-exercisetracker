@@ -2,17 +2,23 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 require('dotenv').config();
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
+const type = require('mongoose/lib/schema/operators/type');
 
 
 
 
-mongoose.connect(process.env.MONGO_URI, ()=>{
-  
-}).then(()=> console.log("connected to db"))
-.catch((err)=>{console.error(err);})
+// mongoose.connect('mongodb+srv://matansdev:zn2u7D79tf3ABnCE@cluster0.0tn77wn.mongodb.net/?retryWrites=true&w=majority', ()=>{
+//   console.log("connected to db")
+// })
+ mongoose.connect('mongodb+srv://matansdev:zn2u7D79tf3ABnCE@cluster0.0tn77wn.mongodb.net/?retryWrites=true&w=majority')
 
-
+ mongoose.Schema({
+  username: {
+    type: String, 
+    unique: true,
+  },
+ });
 
 app.use(cors())
 app.use(express.urlencoded({extended:true}))
@@ -22,28 +28,18 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
-const userNames=[]
-const ids=[]
 
-app.post("/api/users",(req, res)=>{
-const userName=req.body.username
-const isHere=userNames.indexOf(userName)
 
-  if(isHere < 0 ){
+app.post("/api/users",async (req, res)=>{
+const username=req.body.username
+  const user = await User.create({
+    username, 
 
-      userNames.push(userName)
-      ids.push(userNames.length)
-
-      return res.json({
-        userName : userName,
-        id:ids[ids.length-1]
-    })
-  }
-    return res.json({
-      userName : userName,
-      id : ids[isHere]
+  });
+  res.json({
+    user
   })
-})
+});
 
 
 app.post("/api/exe")
