@@ -8,9 +8,7 @@ const type = require('mongoose/lib/schema/operators/type');
 
 
 
-// mongoose.connect('mongodb+srv://matansdev:zn2u7D79tf3ABnCE@cluster0.0tn77wn.mongodb.net/?retryWrites=true&w=majority', ()=>{
-//   console.log("connected to db")
-// })
+
  mongoose.connect('mongodb+srv://matansdev:zn2u7D79tf3ABnCE@cluster0.0tn77wn.mongodb.net/?retryWrites=true&w=majority')
 
  const userSchema = mongoose.Schema(
@@ -54,40 +52,58 @@ app.get("/api/users", async (req, res)=>{
 
 app.post("/api/users",async (req, res)=>{
   const username=req.body.username
-
+  const foundUser= await User.findOne({username})
+  
+  if(foundUser){
+    return res.json(foundUser)
+  }
   const user = await User.create({
     username, 
     });
     
-  await res.json(user)
+   res.json(user)
 });
 
 
-app.post("/api/users/ :_id/exercises",(req, res)=>{
+app.post("/api/users/ :_id/exercises",async (req, res)=>{
+
   const {description, duration, date} = req.body;
   const userId = req.body[":_id"]
   const foundId=User.findById(userId)
-if(!foundId){
-  res.json({
-    error:"There is no user for this id"
-  })
-}
-if(!date){
-  date = new Date();
-}
-res.send({
-username: foundId.username,
-description,
-duration,
-_id:userId,
-})
-
-})
- 
 
 
+    if(!foundId){
+      res.json({
+        error:"There is no user for this id"
+      })
+    }
+    if(!date){
+      date = new Date();
+    }else{
+      date = new Date(date);
+    } 
+     await Exe.create({
+      username: foundId.username,
+      description,
+      duration,
+      date: date.toDateString(),
+      _id:userId,
+    })
+    
+    res.send({
+    username: foundId.username,
+    description,
+    duration,
+    date: date.toDateString(),
+    _id:userId,
+    })
+
+    })
+    
 
 
-const listener = app.listen(process.env.PORT || 3000, () => {
-  console.log('Your app is listening on port ' + listener.address().port)
-})
+
+
+    const listener = app.listen(process.env.PORT || 3000, () => {
+      console.log('Your app is listening on port ' + listener.address().port)
+    })
