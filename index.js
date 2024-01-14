@@ -31,7 +31,7 @@ const type = require('mongoose/lib/schema/operators/type');
   description: String,
   duration: Number,
   date: String,
-  _id:String
+  userid:String
 
  })
  const Exe=mongoose.model('Exe', exercisesSchem)
@@ -63,41 +63,52 @@ app.post("/api/users",async (req, res)=>{
     
    res.json(user)
 });
+// app.get("/api/users/:_id/logs",async (req, res)=>{
+//   const userId = req.params._id;
+//   res.send(userId)
+// })
 
 
-app.post("/api/users/ :_id/exercises",async (req, res)=>{
+app.post("/api/users/:_id/exercises",async (req, res)=>{
 
-  const {description, duration, date} = req.body;
+  let {description, duration, date} = req.body;
   const userId = req.body[":_id"]
-  const foundId=User.findById(userId)
+  let foundUserId = await User.findById(userId);
+  let foundUserName= foundUserId.username;
+  console.log(foundUserName,foundUserId)
+  
 
 
-    if(!foundId){
-      res.json({
-        error:"There is no user for this id"
-      })
+    if (!foundUserId) {
+      res.json({error:"There is no user for this id"})
     }
-    if(!date){
+
+    if (!date) {
       date = new Date();
-    }else{
+    } else {
       date = new Date(date);
     } 
+
      await Exe.create({
-      username: foundId.username,
+      username: foundUserName,
       description,
       duration,
-      date: date.toDateString(),
-      _id:userId,
+      date,
+      userId,
     })
     
     res.send({
-    username: foundId.username,
+    username: foundUserName,
     description,
     duration,
     date: date.toDateString(),
     _id:userId,
     })
 
+    })
+    app.get("/api/users/:_id/logs",async (req, res)=>{
+      res.json()
+      
     })
     
 
