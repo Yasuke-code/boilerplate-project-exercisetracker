@@ -99,7 +99,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
   let { description, duration, date } = req.body;
   const userId = req.body[":_id"]
-  const foundUserId = await User.findById(userId);
+  const foundUserId = await User.find({ userId });
   if (!foundUserId) {
     res.json({ error: "There is no user for this id" })
   };
