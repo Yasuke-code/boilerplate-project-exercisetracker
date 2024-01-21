@@ -4,6 +4,8 @@ const cors = require('cors');
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 require('dotenv').config();
+const http=require('http');
+const index =required(./apps)
 
 
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -147,6 +149,6 @@ app.get("/api/users/:_id/logs", async (req, res) => {
 
 
 
-// const listener = app.listen(process.env.PORT || 3000, () => {
-//   console.log('Your app is listening on port ' + listener.address().port)
-// })
+const listener = app.listen(process.env.PORT || 3000, () => {
+  console.log('Your app is listening on port ' + listener.address().port)
+})
