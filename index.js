@@ -9,7 +9,7 @@ require('dotenv').config();
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect("mongodb+srv://matansdev:O5su4i3kRV2E3ZNM@cluster0.meqhhzy.mongodb.net/?retryWrites=true&w=majority")
   .then(() => {
     console.log("Connected to DB!");
   })
