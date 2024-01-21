@@ -4,8 +4,7 @@ const cors = require('cors');
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 require('dotenv').config();
-const http=require('http');
-const index =required(./apps)
+
 
 
 app.use(bodyParser.urlencoded({ extended: true }))
